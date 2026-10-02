@@ -1,0 +1,9 @@
+{"id": "G01", "level": 1, "question": "How many days do I have to return an unused item?", "expected_chunk_ids": ["C001"], "answer_must_contain": ["30"]}
+{"id": "G02", "level": 1, "question": "How long do refunds take?", "expected_chunk_ids": ["C002"], "answer_must_contain": ["7 business days"]}
+{"id": "G03", "level": 1, "question": "Can I return a Final Sale item?", "expected_chunk_ids": ["C003"], "answer_must_contain": ["cannot"]}
+{"id": "G04", "level": 1, "question": "How long is the warranty on a backpack?", "expected_chunk_ids": ["C005"], "answer_must_contain": ["2 years"]}
+{"id": "G05", "level": 1, "question": "Do you price-match competitors?", "expected_chunk_ids": [], "answer_must_contain": ["not specified"]}
+{"id": "G06", "level": 2, "question": "How do I get my money back if the gear arrives broken?", "expected_chunk_ids": ["C010"], "answer_must_contain": ["48 hours"]}
+{"id": "G07", "level": 2, "question": "My boots fell apart after 10 months. Am I covered?", "expected_chunk_ids": ["C005", "C006"], "answer_must_contain": ["1 year"]}
+{"id": "G08", "level": 3, "question": "A customer wants a 650 USD refund on day 45. What approvals are needed and in what form?", "expected_chunk_ids": ["C007", "C008"], "answer_must_contain": ["store credit", "Support Manager"]}
+{"id": "G09", "level": 3, "question": "Draft a reply to a customer who received a gift and wants to return it.", "expected_chunk_ids": ["C009", "C001"], "answer_must_contain": ["gift receipt"]}

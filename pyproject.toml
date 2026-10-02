@@ -1,0 +1,9 @@
+[project]
+name = "agent-frameworks-lab"
+version = "0.1.0"
+description = "Reference implementations of one document Q&A task across LlamaIndex, LangChain, LangGraph, LangSmith, CrewAI and Microsoft Agent Framework"
+requires-python = ">=3.13"
+dependencies = [
+    "google-genai>=2.27.0",
+    "python-dotenv>=1.2.4",
+]
