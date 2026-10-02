@@ -27,6 +27,7 @@ A reference implementation of one document question-answering task across six ag
 
 ### Foundation
 - [ ] **0** Project setup: `uv`, configuration, provider abstraction, cost meter with a budget cap, shared task definition and golden questions
+- [ ] **0b** Logging: standard-library `logging` configured once at the entry point, modules use `logging.getLogger(__name__)`, no `print` in library code, no secrets in log lines
 
 ### LlamaIndex
 - [ ] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
@@ -46,6 +47,7 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **10** Persistence: checkpointers (in-memory, SQLite, Postgres), threads, state history, replay and fork from a checkpoint, `update_state`, crash recovery
 - [ ] **11** Human-in-the-loop: `interrupt()`, `Command(resume=...)`, approve/edit/reject, breakpoints, idempotency of resumed nodes
 - [ ] **12** Advanced control flow: `Command`, `Send` fan-out, subgraphs, supervisor and handoff patterns, long-term memory `Store`, retry policies, node caching, Functional API, typed streaming
+- [ ] **12b** Serving: the LangGraph agent behind FastAPI with an SSE streaming endpoint, a resume endpoint continuing a paused run by `thread_id`, and a SQLite or Postgres checkpointer
 
 ### LangSmith
 - [ ] **13** Tracing: environment setup, `@traceable`, runs, traces, threads, tags, metadata, cost and latency per step
@@ -66,8 +68,9 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **22** State management comparison: schema, merging, memory scopes, persistence, resume, human pause, replay, measured per framework
 - [ ] **23** Cost, latency, and quality comparison across all implementations
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
+- [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 0 of 26 roadmap items complete.
+**Status:** 0 of 29 roadmap items complete.
 
 ## Models and cost
 
