@@ -26,7 +26,7 @@ A reference implementation of one document question-answering task across six ag
 ## Roadmap
 
 ### Foundation
-- [ ] **0** Project setup: `uv`, configuration, provider abstraction, cost meter with a budget cap, shared task definition and golden questions
+- [x] **0** Project setup: `uv`, configuration, provider abstraction, cost meter with a budget cap, shared task definition and golden questions
 - [ ] **0b** Logging: standard-library `logging` configured once at the entry point, modules use `logging.getLogger(__name__)`, no `print` in library code, no secrets in log lines
 
 ### LlamaIndex
@@ -70,7 +70,7 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
 - [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 0 of 29 roadmap items complete.
+**Status:** 1 of 29 roadmap items complete.
 
 ## Models and cost
 
