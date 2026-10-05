@@ -28,6 +28,7 @@ A reference implementation of one document question-answering task across six ag
 ### Foundation
 - [x] **0** Project setup: `uv`, configuration, provider abstraction, cost meter with a budget cap, shared task definition and golden questions
 - [ ] **0b** Logging: standard-library `logging` configured once at the entry point, modules use `logging.getLogger(__name__)`, no `print` in library code, no secrets in log lines
+- [ ] **0c** Type checking: type hints on new code and a static type checker as a development dependency, run before each commit (existing Phase 0 files are left as they are)
 
 ### LlamaIndex
 - [ ] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
@@ -70,7 +71,7 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
 - [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 1 of 29 roadmap items complete.
+**Status:** 1 of 30 roadmap items complete.
 
 ## Models and cost
 
