@@ -27,7 +27,7 @@ A reference implementation of one document question-answering task across six ag
 
 ### Foundation
 - [x] **0** Project setup: `uv`, configuration, provider abstraction, cost meter with a budget cap, shared task definition and golden questions
-- [ ] **0b** Logging: standard-library `logging` configured once at the entry point, modules use `logging.getLogger(__name__)`, no `print` in library code, no secrets in log lines
+- [x] **0b** Logging: standard-library `logging` configured once at the entry point, modules use `logging.getLogger(__name__)`, no `print` in library code, no secrets in log lines
 - [ ] **0c** Type checking: type hints on new code and a static type checker as a development dependency, run before each commit (existing Phase 0 files are left as they are)
 
 ### LlamaIndex
@@ -42,6 +42,7 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **6** Runnables and LCEL: sequence, parallel, passthrough, lambda, branch; where LCEL fits and where it stops
 - [ ] **7** Retrieval and tools: embeddings, vector stores, retrievers, loaders, splitters, tool definition and calling, tool error handling
 - [ ] **8** Agents with `create_agent` and middleware: model and tool hooks, prebuilt PII, summarization, and human-approval middleware, a custom citation-check middleware, runtime context, short-term memory, MCP tools
+- [ ] **8b** **Agent harness by hand (Interview Topic #15):** build a small harness of your own in plain Python on top of the existing provider abstraction: the model/tool loop with a step and cost cap; context assembly (system prompt, retrieved chunks, bounded tool output, summarised history); a tool registry with schema validation and an allow-list; a permission gate (read-only tools run, write tools need approval); hooks before and after each tool call (log, redact, block); recovery (retry with backoff, fallback model, stop with a clear error); and a transcript saved for replay. Map each piece to its LangGraph/LangChain equivalent so the frameworks in later phases are recognised as harness parts, not magic. Not a new framework to maintain: one small module, kept under about 300 lines
 
 ### LangGraph
 - [ ] **9** `StateGraph`, state schemas, reducers, conditional edges, compile, invoke and stream modes; corrective retrieval graph
@@ -67,11 +68,12 @@ A reference implementation of one document question-answering task across six ag
 ### Cross-cutting
 - [ ] **21** Interoperability: one retrieval tool exposed as an MCP server and consumed by multiple frameworks
 - [ ] **22** State management comparison: schema, merging, memory scopes, persistence, resume, human pause, replay, measured per framework
+- [ ] **22b** **Harness SDK comparison:** run the same task through one or two harness-style SDKs (candidates: LangChain Deep Agents, Claude Agent SDK, OpenAI Agents SDK; maintenance, licence and cost checked first per the dependency policy, see [../TOOL_DECISIONS.md](../TOOL_DECISIONS.md) section 20) against the hand-built harness from 8b. Compare lines of code, control over permissions and context, tracing, and failure handling. Adopt none unless it adds clear weight
 - [ ] **23** Cost, latency, and quality comparison across all implementations
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
 - [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 1 of 30 roadmap items complete.
+**Status:** 2 of 30 roadmap items complete.
 
 ## Models and cost
 
