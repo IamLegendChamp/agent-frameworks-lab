@@ -14,6 +14,7 @@ dependencies = [
     { name = "google-genai" },
     { name = "llama-index-core" },
     { name = "llama-index-embeddings-google-genai" },
+    { name = "llama-index-llms-google-genai" },
     { name = "python-dotenv" },
 ]
 
@@ -22,6 +23,7 @@ requires-dist = [
     { name = "google-genai", specifier = ">=2.27.0" },
     { name = "llama-index-core", specifier = ">=0.14.25" },
     { name = "llama-index-embeddings-google-genai", specifier = ">=0.6.0" },
+    { name = "llama-index-llms-google-genai", specifier = ">=0.11.2" },
     { name = "python-dotenv", specifier = ">=1.2.4" },
 ]
 
@@ -920,6 +922,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/70/ac/ffc116bac024cb0a54b4d28ca9b421e9a08f408c1fcc0039a36de2c0c97b/llama_index_instrumentation-0.6.0.tar.gz", hash = "sha256:b185c4e28a7f32899c27649cc2e2d7d54267fa2ff0cd43cbe2b5212bae98fe3a", size = 56517, upload-time = "2026-08-29T15:33:16.861Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/02/b5/332eb32835360125fa1c90a4b81c58831c48dded5b8426d44e9acd4bf328/llama_index_instrumentation-0.6.0-py3-none-any.whl", hash = "sha256:9588618b271e6c74e58dc81542ea022547c427f036e7cacb655865c4982610bb", size = 16445, upload-time = "2026-08-29T15:33:15.766Z" },
+]
+
+[[package]]
+name = "llama-index-llms-google-genai"
+version = "0.11.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "google-genai" },
+    { name = "llama-index-core" },
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6a/5d/59d9ded5b75ce5f0115c5292d3b7e8707c15abf258ba46357bf51b514591/llama_index_llms_google_genai-0.11.2.tar.gz", hash = "sha256:939d99030b0fa45c0f11ec8b0c3a2f44ce68b347818073c6d39086794e37b308", size = 14865, upload-time = "2026-09-11T16:29:15.996Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/19/3c/f52a38b1905ddae417d05aaae874e9076882e1b3df63452cb3aafe85d0fa/llama_index_llms_google_genai-0.11.2-py3-none-any.whl", hash = "sha256:61c4517f3d5799cad50cf84d14be6236510de4a8f501288d21237baf23252269", size = 15335, upload-time = "2026-09-11T16:29:14.994Z" },
 ]
 
 [[package]]

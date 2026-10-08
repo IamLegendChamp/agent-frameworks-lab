@@ -1,5 +1,7 @@
 import logging
 import os
+import logging
+
 from dotenv import load_dotenv
 
 from llama_index.core import Document
@@ -75,7 +77,7 @@ def main():
     logger.info("semantic splitter: %d nodes", len(semantic_nodes))
     for node in semantic_nodes:
         logger.info("semantic node: %s", node.text[:70])
-        
+
             
 
 if __name__ == "__main__":

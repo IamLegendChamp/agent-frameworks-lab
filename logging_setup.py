@@ -14,6 +14,8 @@ def setup_logging():
     logging.getLogger("llama_index").setLevel(logging.WARNING)  
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("httpcore").setLevel(logging.WARNING)
+    logging.getLogger("fsspec").setLevel(logging.WARNING)
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
