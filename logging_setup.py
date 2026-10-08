@@ -4,10 +4,16 @@ import os
 def setup_logging():
     level_name = os.getenv("LOG_LEVEL", "INFO").upper()
     level = getattr(logging, level_name, logging.INFO)
+    # log_format = "%(asctime)s %(levelname)s %(name)s: %(message)s" if os.getenv("LOG_PREFIX") == "1" else "%(message)s"
+    # log_format = "%(filename)s:%(lineno)d -> %(message)s " if os.getenv("LOG_PREFIX") == "1" else "%(message)s"
+    log_format = "line %(lineno)d -> %(message)s"
     logging.basicConfig(
         level=level,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        format=log_format,
     )
+    logging.getLogger("llama_index").setLevel(logging.WARNING)  
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 

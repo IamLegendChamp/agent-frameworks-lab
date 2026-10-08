@@ -31,7 +31,7 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **0c** Type checking: type hints on new code and a static type checker as a development dependency, run before each commit (existing Phase 0 files are left as they are)
 
 ### LlamaIndex
-- [ ] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
+- [x] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
 - [ ] **2** `VectorStoreIndex`, retrievers versus query engines, response synthesizers, source nodes as citations, index persistence
 - [ ] **3** Advanced retrieval: BM25 and vector fusion, rerank postprocessor, metadata filters, query transforms (HyDE, sub-question), router query engine, evaluation modules
 - [ ] **4** Workflows: typed events, steps, shared `Context`, branching, loops, parallel steps, streaming, human-in-the-loop, durable runs; function-calling and ReAct agents on Workflows
@@ -70,12 +70,12 @@ A reference implementation of one document question-answering task across six ag
 ### Cross-cutting
 - [ ] **21** Interoperability: one retrieval tool exposed as an MCP server and consumed by multiple frameworks
 - [ ] **22** State management comparison: schema, merging, memory scopes, persistence, resume, human pause, replay, measured per framework
-- [ ] **22b** **Harness SDK comparison:** run the same task through one or two harness-style SDKs (candidates: LangChain Deep Agents, Claude Agent SDK, OpenAI Agents SDK; maintenance, licence and cost checked first per the dependency policy, see [../TOOL_DECISIONS.md](../TOOL_DECISIONS.md) section 20) against the hand-built harness from 8b. Compare lines of code, control over permissions and context, tracing, and failure handling. Adopt none unless it adds clear weight
+- [ ] **22b** **Harness SDK comparison:** run the same task through one or two harness-style SDKs (candidates: LangChain Deep Agents, Claude Agent SDK, OpenAI Agents SDK; maintenance, licence and cost checked first per the dependency policy) against the hand-built harness from 8b. Compare lines of code, control over permissions and context, tracing, and failure handling. Adopt none unless it adds clear weight
 - [ ] **23** Cost, latency, and quality comparison across all implementations
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
 - [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 2 of 30 roadmap items complete.
+**Status:** 3 of 30 roadmap items complete.
 
 ## Models and cost
 
