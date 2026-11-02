@@ -32,18 +32,20 @@ A reference implementation of one document question-answering task across six ag
 
 ### LlamaIndex
 - [x] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
-- [ ] **2** `VectorStoreIndex`, retrievers versus query engines, response synthesizers, source nodes as citations, index persistence
-- [ ] **3** Advanced retrieval: BM25 and vector fusion, rerank postprocessor, metadata filters, query transforms (HyDE, sub-question), router query engine, evaluation modules
+- [x] **2** `VectorStoreIndex`, retrievers versus query engines, response synthesizers, source nodes as citations, index persistence
+- [ ] **3** Advanced retrieval: BM25 and vector fusion, rerank postprocessor, metadata filters, MMR retrieval mode (compared with plain top-k), query transforms (HyDE, sub-question), router query engine, evaluation modules
 - [ ] **4** Workflows: typed events, steps, shared `Context`, branching, loops, parallel steps, streaming, human-in-the-loop, durable runs; function-calling and ReAct agents on Workflows
 - [ ] **4b** Managed document processing (LlamaParse) evaluation, subject to free-tier availability
 
 ### LangChain
 - [ ] **5** Model I/O: chat models, messages, prompt templates, output parsers, structured output, streaming, batch, retries and fallbacks, usage metadata
 - [ ] **6** Runnables and LCEL: sequence, parallel, passthrough, lambda, branch; where LCEL fits and where it stops
-- [ ] **7** Retrieval and tools: embeddings, vector stores (Chroma local, then pgvector on Postgres), retrievers, loaders, splitters, tool definition and calling, tool error handling
+- [ ] **7** Retrieval and tools: embeddings, vector stores (Chroma local, then pgvector on Postgres), retrievers (similarity and MMR search types), loaders, splitters, tool definition and calling, tool error handling
 - [ ] **7b** **Parent-document retrieval:** index small child chunks for precise matching, return the larger parent for context. Build it **by hand first** (child chunks carry `parent_id`; look up the parent after the vector hit; dedupe parents; cap context size) and measure answer quality against flat chunks on the golden questions. Then compare with LangChain's `ParentDocumentRetriever` (in the legacy `langchain-classic` package since LangChain 1.0) and LlamaIndex hierarchical/auto-merging from phase 1. Adopt the library only if it adds clear weight. Verification: log the child chunks and their `parent_id`s for one golden question, then the parents returned, then the same question with flat chunks, and keep the logged comparison.
 - [ ] **8** Agents with `create_agent` and middleware: model and tool hooks, prebuilt PII, summarization, and human-approval middleware, a custom citation-check middleware, runtime context, short-term memory, MCP tools
 - [ ] **8b** **Agent harness by hand:** build a small harness of your own in plain Python on top of the existing provider abstraction: the model/tool loop with a step and cost cap; context assembly (system prompt, retrieved chunks, bounded tool output, summarised history); a tool registry with schema validation and an allow-list; a permission gate (read-only tools run, write tools need approval); hooks before and after each tool call (log, redact, block); recovery (retry with backoff, fallback model, stop with a clear error); and a transcript saved for replay. Map each piece to its LangGraph/LangChain equivalent so the frameworks in later phases are recognised as harness parts, not magic. Not a new framework to maintain: one small module, kept under about 300 lines
+- [ ] **8d** **Developer assistant (a custom agent used for real day-to-day dev work):** built on the 8b harness and kept in use after the lab. Read-only tools run freely: list recent commits, show a diff, read a file, run the test suite and summarise failures, search the repo, summarise a log file. Write tools (create a commit, edit a file, open a pull request) sit behind the permission gate and need approval. Add one MCP server of its own (for example a read-only repo and test-results tool) and consume it from the agent, then from a second framework (see 21). Measure it on about 10 recurring chores: success rate, steps, cost, and how often a human had to correct it. Every run saves a transcript. The repo carries a short usage guide (how to run it, what it may and may not do, how to read a transcript)
+- [ ] **8c** **Tool-selection evaluation (how a single agent picks a tool):** log the exact tool schemas (name, description, JSON parameters) sent to the model and the raw tool-call it returns; build about 20 labeled questions with the expected tool and arguments (including questions that need no tool); measure tool-call accuracy (right tool, right arguments, no unnecessary call) with `tool_choice` set to `auto`, `required` and `none`; repeat with 5 tools versus 20 tools (distractors added) to show accuracy dropping as the tool list grows; rewrite the weakest tool descriptions and re-measure. Runs on the hand-built harness from 8b first, then on `create_agent`
 
 ### LangGraph
 - [ ] **9** `StateGraph`, state schemas, reducers, conditional edges, compile, invoke and stream modes; corrective retrieval graph
@@ -75,7 +77,7 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
 - [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 3 of 30 roadmap items complete.
+**Status:** 4 of 36 roadmap items complete.
 
 ## Models and cost
 
@@ -90,6 +92,17 @@ Prices, free-tier limits, and model names change frequently and are verified aga
 ## Configuration
 
 Copy `.env.example` to `.env` and fill in the keys you intend to use. `.env` is git-ignored. Use synthetic data only: LangSmith and CrewAI tracing send traces to third-party services.
+
+## Development stand-ins and production equivalents
+
+| In this repository | In production |
+|---|---|
+| Gemini API free tier | Paid enterprise endpoint with contractual data-use terms |
+| In-memory `SimpleVectorStore`, Chroma | pgvector on managed PostgreSQL |
+| SQLite checkpointer | PostgreSQL checkpointer |
+| Notebooks for exploration | Scripts and CI for maintained code |
+| Exact-match golden checks | LLM-judge or human-reviewed evaluation |
+| `.env` file | Secret manager |
 
 ## Non-goals
 
