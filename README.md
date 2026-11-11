@@ -41,21 +41,23 @@ A reference implementation of one document question-answering task across six ag
 
 **Lane 1: MCP (about 10 to 12 sessions from the start of LangChain)**
 
-1. **F0** Setup: Python 3.11+ venv with `langchain[mcp]`, `langchain-google-genai`, `langgraph`, `langsmith`; keys in `.env`; one logged hello-world model call
-2. **5 (trimmed)** chat model, messages, structured output, usage metadata (done 2026-11-04; the rest of item 5 stays open in the roadmap)
-3. **13 (minimal)** LangSmith tracing wired in so every later step is traced (done 2026-11-04; the rest of item 13 stays open in the roadmap)
-4. **7 (tools part only)** tool definition, tool calling, tool error handling (done 2026-11-11; the retrieval part of item 7 stays open in the roadmap)
-5. **8 (minimal)** `create_agent` with a step cap and the existing cost meter
-6. **F3** MCP server and client in the enterprise shape
+- [x] **F0** Setup: Python 3.11+ venv with `langchain[mcp]`, `langchain-google-genai`, `langgraph`, `langsmith`; keys in `.env`; one logged hello-world model call
+- [x] **5 (trimmed)** chat model, messages, structured output, usage metadata (done 2026-11-04; the rest of item 5 stays open in the roadmap)
+- [x] **13 (minimal)** LangSmith tracing wired in so every later step is traced (done 2026-11-04; the rest of item 13 stays open in the roadmap)
+- [x] **7 (tools part only)** tool definition, tool calling, tool error handling (done 2026-11-11; the retrieval part of item 7 stays open in the roadmap)
+- [ ] **8 (minimal)** `create_agent` with a step cap and the existing cost meter
+- [ ] **F3** MCP server and client in the enterprise shape
 
 **Lane 2: A2A (about 3 to 4 sessions)**
 
-7. **F4** a remote agent exposed over A2A with a signed Agent Card, called by a second agent
+- [ ] **F4** a remote agent exposed over A2A with a signed Agent Card, called by a second agent
 
 **Lane 3: multi-agent orchestration (about 5 to 6 sessions)**
 
-8. **9 (trimmed) and 10 (trimmed)** `StateGraph` basics and a checkpointer
-9. **F5** supervisor and workers with approval gate, hop limit and tracing
+- [ ] **9 (trimmed) and 10 (trimmed)** `StateGraph` basics and a checkpointer
+- [ ] **F5** supervisor and workers with approval gate, hop limit and tracing
+
+**Fast-lane progress: 4 of 9 steps complete.** A roadmap item below is ticked only when its full scope is done; items 5, 7 and 13 are partly done and are marked as such.
 
 **Then resume, in this order:** 6, 7 (rest), 7b, 8 (rest), 8b, 8c, 8d, 9b, 11, 12, 12b, 14, 15, F1 (Langfuse alongside LangSmith), F2 (Langfuse datasets and prompt versions), then LlamaIndex 3, 4, 4b.
 
@@ -73,17 +75,10 @@ Total for all three lanes: roughly 18 to 22 sessions (estimate).
 - [ ] **F4** **A2A, enterprise shape.** A second agent exposed as an A2A service (Agent Card at `/.well-known/agent-card.json`, signed with a JWS, issuer key pinned by the caller); calls over HTTPS-equivalent local transport with a bearer token (stand-in, enterprise version is OAuth/OIDC plus mutual TLS); per-skill authorization by scope; tests for 401 (no credentials) and 403 (valid credentials, wrong scope); the caller verifies the card signature before use. SDK maturity and maintenance are checked first per the dependency policy, and if the Python SDK is not fit the protocol is implemented by hand over HTTP for the single task. Verification: log the card fetch, signature check result, one allowed call, one 401 and one 403
 - [ ] **F5** **Multi-agent orchestration, enterprise shape.** A supervisor and two workers as a LangGraph graph, sharing the F3 MCP tool and calling the F4 agent as a remote worker; hop limit and loop check; routing decision and reason logged on every hop; approval gate (interrupt) on any write tool; checkpointer so a paused run resumes by `thread_id`; one trace per run (nested spans for supervisor decision, worker, model call, tool call) with prompt-content capture off by default; a small CI eval gate on the golden questions that fails the build if answer quality drops; cost and step caps. Verification: log the routing decisions for one question, the paused-and-resumed run, and the failing gate on a deliberately broken prompt
 
-### LlamaIndex
-- [x] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
-- [x] **2** `VectorStoreIndex`, retrievers versus query engines, response synthesizers, source nodes as citations, index persistence
-- [ ] **3** Advanced retrieval: BM25 and vector fusion, rerank postprocessor, metadata filters, MMR retrieval mode (compared with plain top-k), query transforms (HyDE, sub-question), router query engine, evaluation modules
-- [ ] **4** Workflows: typed events, steps, shared `Context`, branching, loops, parallel steps, streaming, human-in-the-loop, durable runs; function-calling and ReAct agents on Workflows
-- [ ] **4b** Managed document processing (LlamaParse) evaluation, subject to free-tier availability
-
 ### LangChain
-- [ ] **5** Model I/O: chat models, messages, prompt templates, output parsers, structured output, streaming, batch, retries and fallbacks, usage metadata
+- [ ] **5** *(partly done: chat model, messages, structured output, usage metadata; open: prompt templates, parsers, streaming, batch, retries and fallbacks)* Model I/O: chat models, messages, prompt templates, output parsers, structured output, streaming, batch, retries and fallbacks, usage metadata
 - [ ] **6** Runnables and LCEL: sequence, parallel, passthrough, lambda, branch; where LCEL fits and where it stops
-- [ ] **7** Retrieval and tools: embeddings, vector stores (Chroma local, then pgvector on Postgres), retrievers (similarity and MMR search types), loaders, splitters, tool definition and calling, tool error handling
+- [ ] **7** *(partly done: tool definition, tool calling, tool error handling, result size cap; open: embeddings, vector stores, retrievers, loaders, splitters)* Retrieval and tools: embeddings, vector stores (Chroma local, then pgvector on Postgres), retrievers (similarity and MMR search types), loaders, splitters, tool definition and calling, tool error handling
 - [ ] **7b** **Parent-document retrieval:** index small child chunks for precise matching, return the larger parent for context. Build it **by hand first** (child chunks carry `parent_id`; look up the parent after the vector hit; dedupe parents; cap context size) and measure answer quality against flat chunks on the golden questions. Then compare with LangChain's `ParentDocumentRetriever` (in the legacy `langchain-classic` package since LangChain 1.0) and LlamaIndex hierarchical/auto-merging from phase 1. Adopt the library only if it adds clear weight. Verification: log the child chunks and their `parent_id`s for one golden question, then the parents returned, then the same question with flat chunks, and keep the logged comparison.
 - [ ] **8** Agents with `create_agent` and middleware: model and tool hooks, prebuilt PII, summarization, and human-approval middleware, a custom citation-check middleware, runtime context, short-term memory, MCP tools
 - [ ] **8b** **Agent harness by hand:** build a small harness of your own in plain Python on top of the existing provider abstraction: the model/tool loop with a step and cost cap; context assembly (system prompt, retrieved chunks, bounded tool output, summarised history); a tool registry with schema validation and an allow-list; a permission gate (read-only tools run, write tools need approval); hooks before and after each tool call (log, redact, block); recovery (retry with backoff, fallback model, stop with a clear error); and a transcript saved for replay. Map each piece to its LangGraph/LangChain equivalent so the frameworks in later phases are recognised as harness parts, not magic. Not a new framework to maintain: one small module, kept under about 300 lines
@@ -99,9 +94,16 @@ Total for all three lanes: roughly 18 to 22 sessions (estimate).
 - [ ] **12b** Serving: the LangGraph agent behind FastAPI with an SSE streaming endpoint, a resume endpoint continuing a paused run by `thread_id`, and a SQLite or Postgres checkpointer
 
 ### LangSmith
-- [ ] **13** Tracing: environment setup, `@traceable`, runs, traces, threads, tags, metadata, cost and latency per step
+- [ ] **13** *(partly done: tracing enabled, run names, tags and metadata; open: `@traceable`, threads, cost and latency per step)* Tracing: environment setup, `@traceable`, runs, traces, threads, tags, metadata, cost and latency per step
 - [ ] **14** Datasets and offline evaluation: heuristic, LLM-as-judge, pairwise, and custom evaluators; experiments and regression comparison
 - [ ] **15** Online evaluation, annotation queues with rubrics, prompt versioning, monitoring; managed deployment options reviewed
+
+### LlamaIndex (items 3, 4 and 4b are parked until the fast lane is complete)
+- [x] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
+- [x] **2** `VectorStoreIndex`, retrievers versus query engines, response synthesizers, source nodes as citations, index persistence
+- [ ] **3** Advanced retrieval: BM25 and vector fusion, rerank postprocessor, metadata filters, MMR retrieval mode (compared with plain top-k), query transforms (HyDE, sub-question), router query engine, evaluation modules
+- [ ] **4** Workflows: typed events, steps, shared `Context`, branching, loops, parallel steps, streaming, human-in-the-loop, durable runs; function-calling and ReAct agents on Workflows
+- [ ] **4b** Managed document processing (LlamaParse) evaluation, subject to free-tier availability
 
 ### CrewAI
 - [ ] **16** Crews: agents, tasks, tools, sequential and hierarchical processes, delegation, structured output, task guardrails
@@ -127,7 +129,7 @@ Total for all three lanes: roughly 18 to 22 sessions (estimate).
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
 - [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 5 of 42 roadmap items complete.
+**Status:** 5 of 42 roadmap items complete (0, 0b, 1, 2, F0); items 5, 7 and 13 are partly done. Fast lane: 4 of 9 steps complete.
 
 **Layout.** Shared modules (`logging_setup.py`, `task_data.py`, `gateway.py`, `limiter.py`, `data/`) sit at the repository root. Framework code lives in `llamaindex_lab/`, `langchain_lab/`, `langgraph_lab/` and `observability_lab/`. Run every script from the repository root as a module, for example `uv run python -m langchain_lab.hello_chat`.
 
