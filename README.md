@@ -1,5 +1,13 @@
 # agent-frameworks-lab
 
+## Context snapshot
+
+- **What:** One document question-answering task implemented across six agent and orchestration frameworks, with measured cost, latency and quality.
+- **How:** Python 3.13 with `uv`; Gemini free tier through `google-genai`, LlamaIndex and LangChain wrappers; stdlib `logging`; shared modules at the repository root.
+- **What we did so far:** set up the project with a provider abstraction, cost meter and logging, built LlamaIndex documents, nodes, vector index, retrievers and cited source nodes, and, with LangChain, called a Gemini chat model with system and human messages, logged token usage and response metadata, read timeout and retries from the environment, and parsed a typed `Answer` (Pydantic) through structured output.
+- **Where we are:** fast lane, lane 1 (MCP). F0, 5 (trimmed) and 13 (minimal) are done (the model calls in `langchain_lab/hello_chat.py` are traced in LangSmith with run names, tags and metadata); 7 (tools part only) is done (`langchain_lab/policy_tools.py` and `tool_chat.py`: a read-only tool, tool calling, tool error handling, an empty-reply fallback and a result size cap); the next item is 8 (minimal): `create_agent`.
+- **Stand-ins (production equivalent):** see "Development stand-ins and production equivalents" below.
+
 A reference implementation of one document question-answering task across six agent and LLM-orchestration frameworks: **LlamaIndex, LangChain, LangGraph, LangSmith, CrewAI, and AutoGen / Microsoft Agent Framework**. Every framework solves the same task against the same data, so differences in state handling, control flow, observability, cost, and latency come from the framework rather than the problem.
 
 ## Scope
@@ -23,12 +31,47 @@ A reference implementation of one document question-answering task across six ag
 - Frameworks: LlamaIndex, LangChain, LangGraph, LangSmith, CrewAI, Microsoft Agent Framework
 - Jupyter notebooks for exploration; scripts and modules for the maintained versions
 
+**What we did so far:** set up the project with a provider abstraction, cost meter and logging, then in LlamaIndex built documents, nodes and parsers, a vector index with retrievers, synthesizers and cited source nodes, and ran the golden questions against it.
+
+## Active track (changed 2026-11-02)
+
+**LlamaIndex phases 3, 4 and 4b are parked** (phases 0, 0b, 1, 2 are done and stay as they are). Work resumes with item **3** after the fast-track below is complete.
+
+**Revised 2026-11-03: the order is now MCP, then A2A, then multi-agent orchestration, each built in the enterprise shape (see the "Fast lane" roadmap section and `project_track/TOOL_DECISIONS.md`, "Enterprise operation of MCP, A2A and multi-agent systems").** Only the prerequisites each one needs come first; the rest of each phase resumes afterwards. Session estimates are focused sittings of 1 to 2 hours, not verified.
+
+**Lane 1: MCP (about 10 to 12 sessions from the start of LangChain)**
+
+1. **F0** Setup: Python 3.11+ venv with `langchain[mcp]`, `langchain-google-genai`, `langgraph`, `langsmith`; keys in `.env`; one logged hello-world model call
+2. **5 (trimmed)** chat model, messages, structured output, usage metadata (done 2026-11-04; the rest of item 5 stays open in the roadmap)
+3. **13 (minimal)** LangSmith tracing wired in so every later step is traced (done 2026-11-04; the rest of item 13 stays open in the roadmap)
+4. **7 (tools part only)** tool definition, tool calling, tool error handling (done 2026-11-11; the retrieval part of item 7 stays open in the roadmap)
+5. **8 (minimal)** `create_agent` with a step cap and the existing cost meter
+6. **F3** MCP server and client in the enterprise shape
+
+**Lane 2: A2A (about 3 to 4 sessions)**
+
+7. **F4** a remote agent exposed over A2A with a signed Agent Card, called by a second agent
+
+**Lane 3: multi-agent orchestration (about 5 to 6 sessions)**
+
+8. **9 (trimmed) and 10 (trimmed)** `StateGraph` basics and a checkpointer
+9. **F5** supervisor and workers with approval gate, hop limit and tracing
+
+**Then resume, in this order:** 6, 7 (rest), 7b, 8 (rest), 8b, 8c, 8d, 9b, 11, 12, 12b, 14, 15, F1 (Langfuse alongside LangSmith), F2 (Langfuse datasets and prompt versions), then LlamaIndex 3, 4, 4b.
+
+Total for all three lanes: roughly 18 to 22 sessions (estimate).
+
 ## Roadmap
 
 ### Foundation
 - [x] **0** Project setup: `uv`, configuration, provider abstraction, cost meter with a budget cap, shared task definition and golden questions
 - [x] **0b** Logging: standard-library `logging` configured once at the entry point, modules use `logging.getLogger(__name__)`, no `print` in library code, no secrets in log lines
 - [ ] **0c** Type checking: type hints on new code and a static type checker as a development dependency, run before each commit (existing Phase 0 files are left as they are)
+
+### Fast lane: MCP, A2A, orchestration (enterprise shape)
+- [ ] **F3** **MCP, enterprise shape.** Server: wrap the existing retrieval function as one read-only tool; a bearer token is required and checked on every call (stand-in, enterprise version is OAuth 2.1 with resource indicators from an identity provider behind a gateway); tools carry a risk class (read, reversible write, destructive, financial) and an allow-list; one audit log line per call (caller, tool, arguments, decision; no secrets or raw personal data); discovery lists only the tools the caller may use; a unit test for the tool and a test that a call without a token is refused. Client: `langchain.mcp` loads the tool into `create_agent`; per-agent tool allow-list, timeout, output size cap, tool output treated as untrusted text. Verification: log the tool list, one allowed call, one refused call, and the audit lines
+- [ ] **F4** **A2A, enterprise shape.** A second agent exposed as an A2A service (Agent Card at `/.well-known/agent-card.json`, signed with a JWS, issuer key pinned by the caller); calls over HTTPS-equivalent local transport with a bearer token (stand-in, enterprise version is OAuth/OIDC plus mutual TLS); per-skill authorization by scope; tests for 401 (no credentials) and 403 (valid credentials, wrong scope); the caller verifies the card signature before use. SDK maturity and maintenance are checked first per the dependency policy, and if the Python SDK is not fit the protocol is implemented by hand over HTTP for the single task. Verification: log the card fetch, signature check result, one allowed call, one 401 and one 403
+- [ ] **F5** **Multi-agent orchestration, enterprise shape.** A supervisor and two workers as a LangGraph graph, sharing the F3 MCP tool and calling the F4 agent as a remote worker; hop limit and loop check; routing decision and reason logged on every hop; approval gate (interrupt) on any write tool; checkpointer so a paused run resumes by `thread_id`; one trace per run (nested spans for supervisor decision, worker, model call, tool call) with prompt-content capture off by default; a small CI eval gate on the golden questions that fails the build if answer quality drops; cost and step caps. Verification: log the routing decisions for one question, the paused-and-resumed run, and the failing gate on a deliberately broken prompt
 
 ### LlamaIndex
 - [x] **1** Documents, nodes, metadata, and node parsers (sentence, token, semantic, hierarchical chunking)
@@ -69,6 +112,13 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **19** Microsoft Agent Framework agents: multi-turn tool loop, conversation threads, tools, middleware, model clients
 - [ ] **20** Microsoft Agent Framework workflows: graph orchestration, sequential, concurrent, group-chat, handoff, and Magentic patterns, approval steps, A2A and MCP interoperability
 
+### Langfuse (added 2026-11-02)
+- [ ] **F1** Tracing: `CallbackHandler` on a chain and a LangGraph run, `flush()` in scripts, user and session ids, cost and latency per step, compared with LangSmith traces of the same run
+- [ ] **F2** Prompt management, datasets, experiments and scores; LLM-as-judge evaluator; optional self-hosted instance (stand-in, enterprise version is Kubernetes or Terraform with managed Postgres and ClickHouse)
+
+### Setup (added 2026-11-02)
+- [x] **F0** Fast-track environment: Python 3.11+, LangChain 1.x, LangGraph 1.x, LangSmith and Langfuse SDKs, keys in `.env`, logged hello-world call (`langchain_lab/hello_chat.py`; the LangSmith and Langfuse keys are added when item 13 starts)
+
 ### Cross-cutting
 - [ ] **21** Interoperability: one retrieval tool exposed as an MCP server and consumed by multiple frameworks
 - [ ] **22** State management comparison: schema, merging, memory scopes, persistence, resume, human pause, replay, measured per framework
@@ -77,7 +127,9 @@ A reference implementation of one document question-answering task across six ag
 - [ ] **24** Architecture decision records, onboarding guide, per-framework fit assessment, and a containerized HTTP service around the best-fit implementation
 - [ ] **24b** Dependency supply-chain controls: locked installs (`uv sync --locked`), `uv audit` and Dependabot in CI, and a private package mirror pattern (local devpi) documented in an ADR
 
-**Status:** 4 of 36 roadmap items complete.
+**Status:** 5 of 42 roadmap items complete.
+
+**Layout.** Shared modules (`logging_setup.py`, `task_data.py`, `gateway.py`, `limiter.py`, `data/`) sit at the repository root. Framework code lives in `llamaindex_lab/`, `langchain_lab/`, `langgraph_lab/` and `observability_lab/`. Run every script from the repository root as a module, for example `uv run python -m langchain_lab.hello_chat`.
 
 ## Models and cost
 

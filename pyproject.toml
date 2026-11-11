@@ -5,8 +5,14 @@ description = "Reference implementations of one document Q&A task across LlamaIn
 requires-python = ">=3.13"
 dependencies = [
     "google-genai>=2.27.0",
+    "langchain>=1.4.8",
+    "langchain-google-genai>=4.4.2",
+    "langfuse>=5.1.0",
+    "langgraph>=1.2.19",
+    "langsmith>=0.14.17",
     "llama-index-core>=0.14.25",
     "llama-index-embeddings-google-genai>=0.6.0",
     "llama-index-llms-google-genai>=0.11.2",
+    "pydantic>=2.13.5",
     "python-dotenv>=1.2.4",
 ]
