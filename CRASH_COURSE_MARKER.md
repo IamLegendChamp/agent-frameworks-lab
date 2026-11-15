@@ -17,10 +17,11 @@ Started: 2026-11-16, during F3 (MCP), step 5d (auth tests as pytest).
 
 - `mcp_lab/test_mcp_auth.py` (pytest suite for the JWT server and allow-list; added 2026-11-16)
 - `CRASH_COURSE_MARKER.md` (this file)
+- `a2a_lab/` (whole folder, F4 A2A lane; added 2026-11-16): `__init__.py`, `policy_agent.py`, `policy_server.py`, `policy_caller.py`; more files are added here as F4 continues
 
 ## Edits under the marker (undo when it ends)
 
-- none yet
+- `pyproject.toml` and `uv.lock`: `uv add a2a-sdk` (2026-11-16) and `uv add "a2a-sdk[http-server,signing]"`; on ending the marker run `uv remove a2a-sdk` (the lane 2 dependency goes with the marker code)
 
 ## Outside the marker (stay)
 
