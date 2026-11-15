@@ -40,7 +40,7 @@ def main() -> None:
         result = f"Tool error: {type(exc).__name__}. Check the arguments and try again."
     if not result:
         result = "No policy text matched this keyword."
-    max_chars = 300
+    max_chars = 1000
     if len(result) > max_chars:
         logger.warning("tool result cut from %d to %d chars", len(result), max_chars)
         result = result[:max_chars] + "\n[truncated]"
