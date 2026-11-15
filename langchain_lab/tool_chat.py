@@ -25,14 +25,16 @@ def main() -> None:
         HumanMessage(content="How many days do I have to return an unused item?"),
 
     ]
+    
     response = llm_with_tools.invoke(messages)
-    # logger.info("tool calls:\n%s", json.dumps(response.tool_calls, indent=2, default=str))
+    logger.info("AIMessage tool calls:\n%s", json.dumps(response.tool_calls, indent=2, default=str))
     if not response.tool_calls:
         logger.warning("model made no tool call; answer: %s", response.text)
         return
     call = response.tool_calls[0]
     try:
         result = search_policy.invoke(call["args"])
+        logger.info("ToolMessage result:\n%s", result)
     except Exception as exc:
         logger.warning("tool failed: %s", type(exc).__name__)
         result = f"Tool error: {type(exc).__name__}. Check the arguments and try again."
@@ -50,7 +52,7 @@ def main() -> None:
     if not final.text:
         logger.warning("model returned empty text; using fallback")
         answer = "Sorry, I couldn't find that. A support agent will follow up."
-    logger.info("final text: %r", final.text)
+    logger.info("AIMessage final text: %r", final.text)
     logger.info("final content: %r", final.content)
     logger.info("finish reason: %s", final.response_metadata.get("finish_reason"))
     logger.info("final answer: %s", answer)
