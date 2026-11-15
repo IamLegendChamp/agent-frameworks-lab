@@ -27,3 +27,4 @@ Started: 2026-11-16, during F3 (MCP), step 5d (auth tests as pytest).
 - `mcp_lab/policy_server.py`, `mcp_lab/policy_client.py`, `mcp_lab/agent_mcp.py`, `mcp_lab/idp.py`, `mcp_lab/auth_tests.py` (the learner wrote these by hand)
 - `.gitignore` entry `.keys/` (security fix, added 2026-11-16)
 - `pyproject.toml` and `uv.lock` changes from `uv add`
+- F3 notes and tick (README lane list, `TOOL_DECISIONS.md` result block, `HANDOFF.md`), written 2026-11-16 after the marker started; they are documentation and stay
