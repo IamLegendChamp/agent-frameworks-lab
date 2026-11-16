@@ -8,8 +8,10 @@ from a2a.server.routes.jsonrpc_routes import create_jsonrpc_routes
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types.a2a_pb2 import AgentCapabilities, AgentCard, AgentInterface, AgentSkill
 from a2a.utils.constants import PROTOCOL_VERSION_1_0, TransportProtocol
+from a2a.utils.signing import create_agent_card_signer
 from starlette.applications import Starlette
 
+from a2a_lab.card_keys import ALGORITHM, KID, PRIVATE_PATH
 from a2a_lab.policy_agent import PolicyExecutor
 from logging_setup import setup_logging
 
@@ -47,8 +49,16 @@ def build_card() -> AgentCard:
     )
 
 
+def build_signed_card() -> AgentCard:
+    signer = create_agent_card_signer(
+        signing_key=PRIVATE_PATH.read_bytes(),
+        protected_header={"kid": KID, "alg": ALGORITHM, "typ": "JOSE"},
+    )
+    return signer(build_card())
+
+
 def build_app() -> Starlette:
-    card = build_card()
+    card = build_signed_card()
     handler = DefaultRequestHandler(
         agent_executor=PolicyExecutor(),
         task_store=InMemoryTaskStore(),
