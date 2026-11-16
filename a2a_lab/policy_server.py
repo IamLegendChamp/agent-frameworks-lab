@@ -10,9 +10,11 @@ from a2a.types.a2a_pb2 import AgentCapabilities, AgentCard, AgentInterface, Agen
 from a2a.utils.constants import PROTOCOL_VERSION_1_0, TransportProtocol
 from a2a.utils.signing import create_agent_card_signer
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
 
 from a2a_lab.card_keys import ALGORITHM, KID, PRIVATE_PATH
 from a2a_lab.policy_agent import PolicyExecutor
+from a2a_lab.security import BearerAuthMiddleware, build_verifier
 from logging_setup import setup_logging
 
 logger = logging.getLogger(__name__)
@@ -65,7 +67,10 @@ def build_app() -> Starlette:
         agent_card=card,
     )
     routes = create_agent_card_routes(card) + create_jsonrpc_routes(handler, rpc_url="/")
-    return Starlette(routes=routes)
+    return Starlette(
+        routes=routes,
+        middleware=[Middleware(BearerAuthMiddleware, verifier=build_verifier())],
+    )
 
 
 if __name__ == "__main__":

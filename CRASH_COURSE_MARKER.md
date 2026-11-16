@@ -17,11 +17,12 @@ Started: 2026-11-16, during F3 (MCP), step 5d (auth tests as pytest).
 
 - `mcp_lab/test_mcp_auth.py` (pytest suite for the JWT server and allow-list; added 2026-11-16)
 - `CRASH_COURSE_MARKER.md` (this file)
-- `a2a_lab/` (whole folder, F4 A2A lane; added 2026-11-16): `__init__.py`, `policy_agent.py`, `policy_server.py`, `policy_caller.py`, `card_keys.py` (card signing key pair; keys go to the git-ignored `.keys/`); more files are added here as F4 continues
+- `a2a_lab/` (whole folder, F4 A2A lane; added 2026-11-16): `__init__.py`, `policy_agent.py`, `policy_server.py`, `policy_caller.py`, `card_keys.py` (card signing key pair; keys go to the git-ignored `.keys/`), `security.py` (bearer-token middleware, allow-list, audit), `test_a2a_security.py` (pytest, 12 checks)
+- `mao_lab/` (whole folder, F5 multi-agent orchestration; added 2026-11-16): `__init__.py`, `graph.py` (supervisor, workers, hop limit, approval gate), `tools.py` (refund ledger with idempotency), `runner.py`, `run_demo.py`, `test_mao_graph.py` (pytest, 9 checks)
 
 ## Edits under the marker (undo when it ends)
 
-- `logging_setup.py` (hand-written file): added `"a2a_lab"` and `"mcp_lab"` to `PROJECT_LOGGERS` so imported modules log at INFO (2026-11-16); on ending the marker the learner decides whether to keep it (it is needed for any module not run as `__main__`)
+- `logging_setup.py` (hand-written file): added `"a2a_lab"`, `"mcp_lab"` and `"mao_lab"` to `PROJECT_LOGGERS` so imported modules log at INFO (2026-11-16); on ending the marker the learner decides whether to keep it (it is needed for any module not run as `__main__`)
 - `pyproject.toml` and `uv.lock`: `uv add a2a-sdk` (2026-11-16) and `uv add "a2a-sdk[http-server,signing]"`; on ending the marker run `uv remove a2a-sdk` (the lane 2 dependency goes with the marker code)
 
 ## Outside the marker (stay)
