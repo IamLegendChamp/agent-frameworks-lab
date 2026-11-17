@@ -46,7 +46,7 @@ A reference implementation of one document question-answering task across six ag
 - [x] **13 (minimal)** LangSmith tracing wired in so every later step is traced (done 2026-11-04; the rest of item 13 stays open in the roadmap)
 - [x] **7 (tools part only)** tool definition, tool calling, tool error handling (done 2026-11-11; the retrieval part of item 7 stays open in the roadmap)
 - [x] **8 (minimal)** `create_agent` with step caps (done 2026-11-15: model-call and tool-call limits, error net and final-message guard; wiring the cost meter and comparing traces in LangSmith stay open; the rest of item 8 stays open in the roadmap)
-- [x] **F3** MCP server and client in the enterprise shape (done 2026-11-16: FastMCP server with `search_policy` over HTTP, `MCPAdapter` client and agent, signed JWT check (issuer, audience, expiry, signature), fail-closed per-caller tool allow-list, audit line per call, seven pytest checks; stand-ins: local key pair for the identity provider, localhost with no TLS or gateway)
+- [ ] **F3** MCP server and client in the enterprise shape
 
 **Lane 2: A2A (about 3 to 4 sessions)**
 

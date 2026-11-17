@@ -1,7 +1,7 @@
 import logging
 import os
 
-PROJECT_LOGGERS = ("__main__", "gateway", "limiter", "task_data", "llama_docs", "a2a_lab", "mcp_lab", "mao_lab")
+PROJECT_LOGGERS = ("__main__", "gateway", "limiter", "task_data", "llama_docs")
 QUIET_LOGGERS = ("llama_index", "httpx", "httpcore", "fsspec", "asyncio")
 
 
